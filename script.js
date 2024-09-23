@@ -12,14 +12,25 @@ function downloadImages(){
 	const downloadPromises = images.map(image => {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
-		img.src = image.url;
+			img.src = image.url;
 		
-		img.onload = () => resolve(img);
+			img.onload = () => resolve(img);
 
-		img.onerror = () => reject(new error(`Failed to load image's URL: ${image.url}`));
+			img.onerror = () => reject(new Error(`Failed to load image's URL: ${image.url}`));
 		})	
 	});
+
+	Promise.all(downloadPromises)
+		.then((imgElements) => {
+			imgElements.forEach(img => {
+				output.appendChild(img);
+			})
+		})
+		.catch(error => {
+			console.error(error.message);
+		})
 	
 }
 
 btn.addEventListener("click", downloadImages);
+
